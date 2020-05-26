@@ -6,7 +6,7 @@ const PORT = 5000 || process.env.PORT;
 
 app.get('/', (req, res) => {
   res.status(200).json({
-    message: 'working'
+    message: 'working!'
   })
 })
 
