@@ -1,4 +1,4 @@
-# courses-app
+# crm-system
 
 ```
 Описание
