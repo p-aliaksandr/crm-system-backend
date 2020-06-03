@@ -11,6 +11,7 @@ const positionRoutes = require('./routes/position');
 const keys = require('./config/keys');
 const app = express();
 
+mongoose.set('useCreateIndex', true);
 mongoose.connect(keys.mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
