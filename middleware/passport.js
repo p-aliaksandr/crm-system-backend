@@ -1,12 +1,12 @@
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
-const mongoose = require('mongoose');
-const User = mongoose.model('users');
-const keys = require('../config/keys');
+const JwtStrategy = require('passport-jwt').Strategy
+const ExtractJwt = require('passport-jwt').ExtractJwt
+const mongoose = require('mongoose')
+const User = mongoose.model('users')
+const keys = require('../config/keys')
 
 const options = {
-jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-secretOrkey: keys.jwt
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: keys.jwt
 }
 
 module.exports = passport => {
@@ -20,9 +20,10 @@ module.exports = passport => {
         } else {
           done(null, false)
         }
-      } catch(e) {
+      } catch (e) {
         console.log(e)
       }
+
     })
   )
 }

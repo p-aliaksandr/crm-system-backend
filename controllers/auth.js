@@ -1,16 +1,18 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const keys = require('../config/keys');
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const User = require('../models/User')
+const keys = require('../config/keys')
+const errorHandler = require('../utils/errorHandler')
+
 
 module.exports.login = async function(req, res) {
   const candidate = await User.findOne({email: req.body.email})
 
   if (candidate) {
-    //проверка пароля, пользователь существует
-    const passwordResult = bcrypt.compareSync(req.body.password.toString(), candidate.password)
+    // Проверка пароля, пользователь существует
+    const passwordResult = bcrypt.compareSync(req.body.password, candidate.password)
     if (passwordResult) {
-      //генерируем токен, пароли совпали
+      // Генерация токена, пароли совпали
       const token = jwt.sign({
         email: candidate.email,
         userId: candidate._id
@@ -20,42 +22,44 @@ module.exports.login = async function(req, res) {
         token: `Bearer ${token}`
       })
     } else {
-      //пароли не совпали
+      // Пароли не совпали
       res.status(401).json({
-        message: 'пароли не совпадают'
+        message: 'Пароли не совпадают. Попробуйте снова.'
       })
     }
   } else {
-    //пользователя нет, ошибка
+    // Пользователя нет, ошибка
     res.status(404).json({
-      message: 'пользователь с таким e-mail не найден'
+      message: 'Пользователь с таким email не найден.'
     })
   }
 }
 
+
 module.exports.register = async function(req, res) {
   // email password
-  const candidate = await User.findOne({email: req.body.email});
+  const candidate = await User.findOne({email: req.body.email})
 
   if (candidate) {
-    // пользователь существует, нужно отправить ошибку
+    // Пользователь существует, нужно отправить ошибку
     res.status(409).json({
-      message: 'такой email уже занят, попробуйте другой'
+      message: 'Такой email уже занят. Попробуйте другой.'
     })
   } else {
-    // нужно создать пользователя
+    // Нужно создать пользователя
     const salt = bcrypt.genSaltSync(10)
     const password = req.body.password
     const user = new User({
       email: req.body.email,
-      password: bcrypt.hashSync(password.toString(), salt)
+      password: bcrypt.hashSync(password, salt)
     })
 
     try {
       await user.save()
       res.status(201).json(user)
     } catch(e) {
-      console.log(e)
-    } 
+      errorHandler(res, e)
+    }
+
   }
 }
