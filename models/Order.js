@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
 const orderSchema = new Schema({
   date: {
@@ -24,9 +24,9 @@ const orderSchema = new Schema({
     }
   ],
   user: {
-    type: Number,
-    required: true
+    ref: 'users',
+    type: Schema.Types.ObjectId
   }
 })
 
-module.exports = mongoose.model('orders', orderSchema);
+module.exports = mongoose.model('orders', orderSchema)
